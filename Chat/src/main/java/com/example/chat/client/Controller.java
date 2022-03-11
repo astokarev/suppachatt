@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,6 +28,8 @@ public class Controller implements Initializable {
 
     private boolean authentificated;
     private String nickname;
+    private File messageHistoryFile;
+    private final int RECOVERABLE_MESSAGE_QUANTITY = 100;
 
     public void setAuthenticated(boolean authentificated) {
         this.authentificated = authentificated;
@@ -84,7 +87,38 @@ public class Controller implements Initializable {
         Network.setCallOnAuthenticated(args -> {
             setAuthenticated(true);
             nickname = args[0].toString();
+            //////////вынести в отдельный класс///////////////
+            int lineNumber = 0;
+            if (setMessageHistoryFile().exists()) {
+                try (FileReader fileReader = new FileReader(messageHistoryFile)) {
+                    LineNumberReader lineNumberReader = new LineNumberReader(fileReader);
+                    while (lineNumberReader.readLine() != null) {
+                        lineNumber++;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try (BufferedReader bufferedReader = new BufferedReader(new FileReader(messageHistoryFile))) {
+                    for (int i = 0; i < lineNumber; i++) {
+                        String line = bufferedReader.readLine();
+                        if (i >= lineNumber - RECOVERABLE_MESSAGE_QUANTITY) {
+                            textArea.appendText(line + "\n");
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    messageHistoryFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            ///////////////
         });
+
 
         Network.setCallOnMsgReceived(args -> {
             String msg = args[0].toString();
@@ -104,7 +138,17 @@ public class Controller implements Initializable {
             } else {
                 textArea.setWrapText(true);
                 textArea.appendText(msg + "\n");
+                try (FileWriter fw = new FileWriter(messageHistoryFile, true)) {
+                    fw.append(msg + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
+
+    }
+    private File setMessageHistoryFile() {
+        messageHistoryFile = new File( nickname + ".cmh");
+        return messageHistoryFile;
     }
 }

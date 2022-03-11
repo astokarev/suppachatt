@@ -19,7 +19,7 @@ public class Database {
             statement = connection.createStatement();
             createUserTable();
             prepareAllStatement();
-            createUser("user3", "user3", "user3");
+            //createUser("user3", "user3", "user3");
             //statement.executeUpdate("INSERT INTO users (login, password, nickname) VALUES ('login2', 'pass2', 'user2');");
 
             return true;
