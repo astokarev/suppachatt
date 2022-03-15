@@ -10,11 +10,19 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ListView?>
-<VBox fx:controller="com.example.chat.client.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
+<VBox fx:controller="chatApp.client.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
     <HBox fx:id="authPanel">
         <TextField HBox.hgrow="ALWAYS" fx:id="loginField" promptText="Login" />
         <PasswordField HBox.hgrow="ALWAYS" fx:id="passField" promptText="Password" onAction="#sendAuth" />
         <Button HBox.hgrow="ALWAYS" text="Connect" onAction="#sendAuth" />
+
+    </HBox>
+
+    <HBox fx:id="registerPanel">
+        <TextField HBox.hgrow="ALWAYS" fx:id="setLoginField" promptText="Login" />
+        <PasswordField HBox.hgrow="ALWAYS" fx:id="setPassField" promptText="Password" onAction="#recordNewUser" />
+        <TextField HBox.hgrow="ALWAYS" fx:id="setNickname" promptText="Nickname" />
+        <Button HBox.hgrow="ALWAYS" text="register" onAction="#recordNewUser"/>
     </HBox>
 
     <HBox VBox.vgrow="ALWAYS">

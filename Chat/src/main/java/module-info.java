@@ -4,6 +4,6 @@ module com.example.chat {
     requires java.sql;
 
 
-    opens com.example.chat.client to javafx.fxml;
-    exports com.example.chat.client;
+    opens chatApp.client to javafx.fxml;
+    exports chatApp.client;
 }
